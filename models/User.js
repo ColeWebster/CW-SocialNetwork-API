@@ -30,8 +30,9 @@ const userSchema = new Schema(
         ]
     }, 
     {
-        toJSON:: {
+        toJSON: {
             virtuals: true,
+            // Friend Count here
         },
         id: false,    
     }
