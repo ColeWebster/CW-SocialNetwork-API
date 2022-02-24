@@ -46,9 +46,35 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
     },
     addFriend(req, res) {
-        // See Activity26 on Tags
+        // --------- See Activity26 on Tags
+        // addTag(req, res) {
+        //     Application.findOneAndUpdate(
+        //       { _id: req.params.applicationId },
+        //       { $addToSet: { tags: req.body } },
+        //       { runValidators: true, new: true }
+        //     )
+        //       .then((application) =>
+        //         !application
+        //           ? res.status(404).json({ message: 'No application with this id!' })
+        //           : res.json(application)
+        //       )
+        //       .catch((err) => res.status(500).json(err));
+        //   },
     },
     removeFriend(req, res) {
-        // See Activity26 on Tags
+        // -------------- See Activity26 on Tags
+        // removeTag(req, res) {
+        //     Application.findOneAndUpdate(
+        //       { _id: req.params.applicationId },
+        //       { $pull: { tags: { responseId: req.params.tagId } } },
+        //       { runValidators: true, new: true }
+        //     )
+        //       .then((application) =>
+        //         !application
+        //           ? res.status(404).json({ message: 'No application with this id!' })
+        //           : res.json(application)
+        //       )
+        //       .catch((err) => res.status(500).json(err));
+        //   },
     },
 };  
