@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const formatDate = (date) => date.toLocalString();
 
 const reactionSchema = new Schema(
     {
@@ -14,12 +15,12 @@ const reactionSchema = new Schema(
         username: {
             type: String,
             required: true,
-        }
+        },
         createdAt: {
             type: Date,
             default: Date.now,
             //Getting to format the timestamp on query
-            get: (value) => value.toDateString(),
+            get: formatDate,
         }
     }
 );

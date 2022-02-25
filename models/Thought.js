@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const reactionSchema = require('./Reaction');
-
+const formatDate = (date) => date.toLocalString();
+ 
 const thoughtSchema = new Schema(
     {
        thoughtText: {
@@ -12,9 +13,7 @@ const thoughtSchema = new Schema(
        createdAt: {
            type: Date,
            default: Date.now,
-           // Getter to format the timestamp on query
-           //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toDateString
-           get: (value) => value.toDateString(),
+           get: formatDate,
         },
         username: {
             type: String,

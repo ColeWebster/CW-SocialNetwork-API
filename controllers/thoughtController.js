@@ -1,12 +1,14 @@
-const { Thought, User } = require("../models");
+const { User, Thought } = require("../models");
 
 module.exports = {
     getThoughts(req,res) {
-        Thought.find().then(async (thoughts) => {
-            return res.status(200).json(thoughts);
-        }).catch((err) => {
-            return res.status(500).json(err);
-        });
+        Thought.find()
+            .then(async (thoughts) => {
+                return res.status(200).json(thoughts)
+            })
+            .catch((err) => {
+                return res.status(500).json(err)
+            });
     },
     getSingleThought(req,res) {
         Thought.findOne({ _id: req.params.thoughtId})
@@ -23,8 +25,18 @@ module.exports = {
     },
     createThought(req, res) {
         Thought.create(req.body)
-            .then((user) => res.status(200).json(thought))
-            .catch((err) => res.status(500).json(err));
+            .then((thought) =>
+                User.findOneAndUpdate(
+                    {username: thought.username},
+                    {$addToSet: {thoughts: thought._id}},
+                    {new: true}
+                )
+            )
+            .then((user) => res.status(200).json(user))
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).json(err);
+            });
     },
     updateThought(req,res) {
         Thought.findOneAndUpdate(
