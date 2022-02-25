@@ -1,20 +1,20 @@
 {
-  "name": "cw-socialnetwork-api",
-  "version": "1.0.0",
-  "description": "A social network api",
+  "name": "CW-SocialNetwork-API",
+  "version": "1.0.1",
+  "description": "Mongoose back-end project - Main",
   "main": "server.js",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index",
+    "dev": "nodemon index",
+    "seed": "node utils/seed",
+    "heroku-postbuild": "node utils/seed.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ColeWebster/CW-SocialNetwork-API.git"
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13"
   },
-  "author": "\"Cole Webster",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ColeWebster/CW-SocialNetwork-API/issues"
-  },
-  "homepage": "https://github.com/ColeWebster/CW-SocialNetwork-API#readme"
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
 }
