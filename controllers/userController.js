@@ -1,5 +1,4 @@
-const { deleteStudent } = require('../../Main/controllers/studentController');
-const { User, Thought } = require('../models');
+const { User, Thoughts } = require('../models');
 
 module.exports = {
     getUsers(req, res) {
