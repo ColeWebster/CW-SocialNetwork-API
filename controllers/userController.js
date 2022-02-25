@@ -55,7 +55,7 @@ module.exports = {
             .then((thought) =>
                 !thought
                     ? res.status(404).json({ message: 'User removed, but no thoughts found'})
-                    : res.json ({'User successfully deleted'})
+                    : res.json({message: 'User successfully deleted'})
             )
             .catch((err) => res.status(500).json(err));
     },
@@ -79,7 +79,14 @@ module.exports = {
         // --- https://docs.mongodb.com/manual/reference/operator/update/pull/
         User.findOneAndUpdate(
             {_id: req.params.userId},
-            {$pull{}}
+            {$pull: {friend: req.params.friend}},
+            {new: true},
         )
+        .then((user) =>
+        !user
+            ? res.status(404).json({ message: 'No user with that ID'})
+            : res.status(200).json(user)
+        )
+        .catch((err) => res.status(500).json(err));
     },
 };  
