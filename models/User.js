@@ -13,31 +13,27 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            match: 
+            match: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
             // Look up my REGEX for the match
         },
         thoughts: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "Thought",
+                ref: "thought",
             },
         ],
         friends: [
             {
                 type: Schema.Types.ObjectId,
-                ref: "User",
+                ref: "user",
             }
         ]
     }, 
     {
-        toJSON: {
-            virtuals: true,
-            // Friend Count here
-        },
-        id: false,    
+        toJSON: { getters: true,},       
     }
 )
 
-const User = model("User", userSchema);
+const User = model("user", userSchema);
 //Create a model
 module.exports = User;
