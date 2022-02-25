@@ -11,3 +11,7 @@
 -All routes are created.
 
 -Creating controllers now.
+
+-- Controllers are done, models are done
+
+- Finishing routes
