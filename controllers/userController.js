@@ -1,14 +1,13 @@
+const { deleteStudent } = require('../../Main/controllers/studentController');
 const { User, Thought } = require('../models');
 
 module.exports = {
     getUsers(req, res) {
         User.find().then(async (users) => {
-            const userObj = { users };
-            return res.json(userObj);
-        })
-            .catch((err) => {
+            return res.status(200).json(users);
+        }).catch((err) => {
                 return res.status(500).json(err);
-            });
+        });
     },
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
@@ -16,65 +15,71 @@ module.exports = {
             .then(async (user) =>
                 !user
                     ? res.status(400).json({ message: 'No user appears with this ID' })
-                    : res.json({
-                        user,
-                        thought: await thought(req.params.thoughtId),
-                    })
-            ).catch((err) => {
+                    : res.status(200).json(user),
+            )
+            .catch((err) => {
                 console.log(err);
                 return res.status(500).json(err);
             });
     },
     createUser(req, res) {
         User.create(req.body)
-            .then((user) => res.json(user))
-        .catch((err) => res.status(500).json(err));
+            .then((user) => res.status(200).json(user))
+            .catch((err) => res.status(500).json(err));
     },
     updateUser(req, res) {
-        // Find more examples
+        User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {$set: req.body},
+            {runValidation: true, new: true}
+        )
+        .select('-__v')
+            .then(async (user) =>
+                !user
+                    ? res.status(400).json({ message: 'No user appears with this ID' })
+                    : res.status(200).json(user),
+            )
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).json(err);
+            });
     },
     deleteUser(req, res) {
       // Find a simple delete by ID    
-      User.findOneAnDelete({_id: req.params.userId})
+      User.findOneAndRemove({_id: req.params.userId})
         .then((user) =>
             !user
                 ? res.status(404).json({ message: 'No user with that ID'})
-                : Reaction.deleteMany({_id: {
-                    $in: user.reaction} })
-        )
-        .then(() => res.json({ message: 'User and associated apps deleted!' }))
-      .catch((err) => res.status(500).json(err));
+                : Thought.deleteMany({ username: user.username})
+            )
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'User removed, but no thoughts found'})
+                    : res.json ({'User successfully deleted'})
+            )
+            .catch((err) => res.status(500).json(err));
     },
     addFriend(req, res) {
-        // --------- See Activity26 on Tags
-        // addTag(req, res) {
-        //     Application.findOneAndUpdate(
-        //       { _id: req.params.applicationId },
-        //       { $addToSet: { tags: req.body } },
-        //       { runValidators: true, new: true }
-        //     )
-        //       .then((application) =>
-        //         !application
-        //           ? res.status(404).json({ message: 'No application with this id!' })
-        //           : res.json(application)
-        //       )
-        //       .catch((err) => res.status(500).json(err));
-        //   },
+        //--------- Reference Mini Project Courses
+        //https://docs.mongodb.com/manual/reference/operator/update/addToSet/
+        User.findOneAndUpdate(
+            {_id:req.params.userId},
+            {$addToSet: {friend: req.params.friendId}},
+            {new: true},
+        )
+        .then((user) =>
+        !user
+            ? res.status(404).json({ message: 'No user with that ID'})
+            : res.status(200).json(user)
+        )
+        .catch((err) => res.status(500).json(err));
     },
+
     removeFriend(req, res) {
-        // -------------- See Activity26 on Tags
-        // removeTag(req, res) {
-        //     Application.findOneAndUpdate(
-        //       { _id: req.params.applicationId },
-        //       { $pull: { tags: { responseId: req.params.tagId } } },
-        //       { runValidators: true, new: true }
-        //     )
-        //       .then((application) =>
-        //         !application
-        //           ? res.status(404).json({ message: 'No application with this id!' })
-        //           : res.json(application)
-        //       )
-        //       .catch((err) => res.status(500).json(err));
-        //   },
+        // --- https://docs.mongodb.com/manual/reference/operator/update/pull/
+        User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {$pull{}}
+        )
     },
 };  
