@@ -13,10 +13,10 @@ module.exports = {
     getSingleThought(req, res) {
         Thought.findOne({ _id: req.params.thoughtId })
             .select('-__v')
-            .then(async (thought) =>
-                !user
+            .then(async (thoughts) =>
+                !thoughts
                     ? res.status(400).json({ message: 'No thought appears with this ID' })
-                    : res.status(200).json(user),
+                    : res.status(200).json(thoughts),
             )
             .catch((err) => {
                 console.log(err);

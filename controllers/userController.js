@@ -1,4 +1,4 @@
-const { User, Thoughts } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
     getUsers(req, res) {
@@ -24,7 +24,7 @@ module.exports = {
     createUser(req, res) {
         User.create(req.body)
             .then((user) => res.status(200).json(user))
-            .catch((err) => res.status(500).json(err));
+            .catch((err) => res.status(500).json({ message: err.message}));
     },
     updateUser(req, res) {
         User.findOneAndUpdate(
@@ -59,11 +59,10 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
     addFriend(req, res) {
-        //--------- Reference Mini Project Courses
-        //https://docs.mongodb.com/manual/reference/operator/update/addToSet/
+        //--------- Reference Mini Project
         User.findOneAndUpdate(
             {_id:req.params.userId},
-            {$addToSet: {friend: req.params.friendId}},
+            {$addToSet: {friends: req.params.friendId}},
             {new: true},
         )
         .then((user) =>
@@ -78,14 +77,16 @@ module.exports = {
         // --- https://docs.mongodb.com/manual/reference/operator/update/pull/
         User.findOneAndUpdate(
             {_id: req.params.userId},
-            {$pull: {friend: req.params.friend}},
+            {$pull: {friends: req.params.friendId}},
             {new: true},
         )
         .then((user) =>
         !user
-            ? res.status(404).json({ message: 'No user with that ID'})
+            ? res.status(400).json({ message: 'User does not exist'})
             : res.status(200).json(user)
         )
-        .catch((err) => res.status(500).json(err));
+        .catch((err) => 
+                res.status(500)
+                    .json({ message: err.message }));
     },
 };  
